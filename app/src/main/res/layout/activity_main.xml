@@ -19,7 +19,23 @@
 
     <EditText
         android:id="@+id/edit_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_edit_text"
+        android:padding="12dp"
+        app:layout_constraintBottom_toTopOf="@id/edit_note_desc"
+        app:layout_constraintEnd_toStartOf="@id/add_note"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_note_desc"
         android:layout_width="0dp"
+        android:hint="Desc"
+        android:background="@drawable/bg_edit_text"
+        android:padding="8dp"
+        android:layout_marginStart="12dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +44,7 @@
     <Button
         android:id="@+id/add_note"
         android:text="add"
+        android:backgroundTint="@color/teal_700"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
