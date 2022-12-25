@@ -2,38 +2,50 @@ package com.example.newinstagram
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newinstagram.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ItemClick {
 
-    lateinit var  recyclerView: RecyclerView
-    lateinit var  editText: EditText
-    lateinit var  button: Button
-    lateinit var  adapter: NoteAdapter
+    private lateinit var binding: ActivityMainBinding
+    lateinit var adapter: NoteAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        recyclerView = findViewById(R.id.main_recycler)
-        editText = findViewById(R.id.edit_note)
-        button = findViewById(R.id.add_note)
-        adapter = NoteAdapter()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        recyclerView.adapter = adapter
+        adapter = NoteAdapter(this)
 
-        button.setOnClickListener {
-            if (editText.text.isEmpty()) {
-                Toast.makeText(this, "Напишите что то!!", Toast.LENGTH_SHORT).show()
-            }else {
-                adapter.addNote(editText.text.toString())
-                editText.setText("")
+        binding.mainRecycler.adapter = adapter
+
+        binding.addNote.setOnClickListener {
+            if (binding.editNote.text.isEmpty()) {
+                Toast.makeText(this, "Заполни поле!!!!", Toast.LENGTH_SHORT).show()
+            } else {
+                val note =
+                    Note(binding.editNote.text.toString(), binding.editNoteDesc.text.toString())
+                adapter.addNote(note)
+                binding.editNote.setText("")
             }
 
         }
+    }
+
+    override fun delete(pos: Int) {
+        adapter.delete(pos)
+    }
+
+    override fun edit(pos: Int) {
+        val editNote = adapter.list[pos]
+        binding.editNote.setText(editNote.title)
+        binding.editNoteDesc.setText(editNote.desc)
+        binding.addNote.setOnClickListener {
+            val newNote = Note(binding.editNote.text.toString(),binding.editNoteDesc.text.toString(),)
+            adapter.edit(pos,newNote)
+        }
+
     }
 }

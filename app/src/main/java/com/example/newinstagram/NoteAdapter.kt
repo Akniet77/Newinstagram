@@ -7,33 +7,42 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newinstagram.databinding.ItemNoteBinding
 
-class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+class NoteAdapter(val listener: ItemClick): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
-    var list: MutableList<String> = ArrayList()
+    var list: MutableList<Note> = ArrayList()
 
-    fun addNote(text: String){
-        list.add(text)
+    fun addNote(note: Note){
+        list.add(note)
         notifyItemInserted(list.size)
     }
 
-     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        var text = itemView.findViewById<TextView>(R.id.item_text)
+    fun edit(pos:Int, note: Note) {
+        list.set(pos,note)
+        notifyItemChanged(pos)
+    }
 
-        fun  bind(message: String){
-            text.text = message
-            text.setOnClickListener{
-                list.removeAt(adapterPosition)
-                notifyItemRemoved(list.size)
-                true
+    fun delete(pos: Int){
+        list.removeAt(pos)
+        notifyItemRemoved(pos)
+    }
+
+     inner class ViewHolder(private val binding: ItemNoteBinding): RecyclerView.ViewHolder(binding.root){
+
+        fun  bind(note: Note){
+            binding.itemText.text = note.title
+            binding.itemTextDesc.text = note.desc
+            binding.itemText.setOnClickListener{
+               listener.delete(adapterPosition)
             }
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_note,
-            parent, false))
+        val view = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(view)
 
     }
 
@@ -47,3 +56,4 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
     }
 }
+
