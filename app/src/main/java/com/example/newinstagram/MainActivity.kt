@@ -1,12 +1,13 @@
 package com.example.newinstagram
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
 import com.example.newinstagram.databinding.ActivityMainBinding
+import com.example.newinstagram.databinding.FragmentNoteBinding
 
-class MainActivity : AppCompatActivity(), ItemClick {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var adapter: NoteAdapter
@@ -14,38 +15,17 @@ class MainActivity : AppCompatActivity(), ItemClick {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = NoteAdapter(this)
-
-        binding.mainRecycler.adapter = adapter
-
-        binding.addNote.setOnClickListener {
-            if (binding.editNote.text.isEmpty()) {
-                Toast.makeText(this, "Заполни поле!!!!", Toast.LENGTH_SHORT).show()
-            } else {
-                val note =
-                    Note(binding.editNote.text.toString(), binding.editNoteDesc.text.toString())
-                adapter.addNote(note)
-                binding.editNote.setText("")
-            }
-
-        }
-    }
-
-    override fun delete(pos: Int) {
-        adapter.delete(pos)
-    }
-
-    override fun edit(pos: Int) {
-        val editNote = adapter.list[pos]
-        binding.editNote.setText(editNote.title)
-        binding.editNoteDesc.setText(editNote.desc)
-        binding.addNote.setOnClickListener {
-            val newNote = Note(binding.editNote.text.toString(),binding.editNoteDesc.text.toString(),)
-            adapter.edit(pos,newNote)
-        }
+        val frgSettingsMain = NoteFragment()
+        noteFragment (frgSettingsMain)
 
     }
+
+
+    private fun noteFragment(fragment: Fragment) =
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, fragment)
+            .commit()
 }
